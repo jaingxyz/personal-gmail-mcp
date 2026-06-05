@@ -4,7 +4,7 @@ A [Model Context Protocol](https://modelcontextprotocol.io/) server that exposes
 
 Sibling to [personal-outlook-mcp](https://github.com/jaingxyz/personal-outlook-mcp); same design (local stdio, keyring-backed tokens, you bring your own OAuth client), different provider. Tools are prefixed `gmail_*`.
 
-> **Status: early.** Phase 1 (loopback OAuth + keyring token cache) and Phase 2 (mail tools: list/search/read/labels/mark-read/modify-labels/trash/send/reply/draft) are in place. Calendar tools are next.
+> **Status: functional.** Auth (loopback OAuth + keyring token cache), 12 mail tools (list/search/read/labels/mark-read/modify-labels/trash/send/reply/draft), and 7 calendar tools (list calendars, list/read/create/update/cancel events, respond to invite) are in place and verified against a live account.
 
 ## Why keyring + bring-your-own-client
 

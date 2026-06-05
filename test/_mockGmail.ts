@@ -23,6 +23,14 @@ export interface MockGmail {
         send: ReturnType<typeof vi.fn>;
       };
     };
+    calendarList: { list: ReturnType<typeof vi.fn> };
+    events: {
+      list: ReturnType<typeof vi.fn>;
+      get: ReturnType<typeof vi.fn>;
+      insert: ReturnType<typeof vi.fn>;
+      patch: ReturnType<typeof vi.fn>;
+      delete: ReturnType<typeof vi.fn>;
+    };
   };
   calls: Record<string, unknown[]>;
 }
@@ -65,6 +73,17 @@ export function makeMockGmail(): MockGmail {
           rec("drafts.send", () => ({ id: "sent1", threadId: "t1" })),
         ),
       },
+    },
+    // Calendar API surface (calendarClient() returns this same object).
+    calendarList: {
+      list: vi.fn(rec("calendarList.list", () => ({ items: [] }))),
+    },
+    events: {
+      list: vi.fn(rec("events.list", () => ({ items: [] }))),
+      get: vi.fn(rec("events.get", () => ({}))),
+      insert: vi.fn(rec("events.insert", () => ({ id: "evt1" }))),
+      patch: vi.fn(rec("events.patch", () => ({ id: "evt1" }))),
+      delete: vi.fn(rec("events.delete", () => ({}))),
     },
   };
 
