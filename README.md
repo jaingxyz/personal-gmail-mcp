@@ -4,7 +4,7 @@ A [Model Context Protocol](https://modelcontextprotocol.io/) server that exposes
 
 Sibling to [personal-outlook-mcp](https://github.com/jaingxyz/personal-outlook-mcp); same design (local stdio, keyring-backed tokens, you bring your own OAuth client), different provider. Tools are prefixed `gmail_*`.
 
-> **Status: early / auth spike.** Phase 1 (loopback OAuth + keyring token cache + `whoami`) is in place. Mail and calendar tools are being added.
+> **Status: early.** Phase 1 (loopback OAuth + keyring token cache) and Phase 2 (mail tools: list/search/read/labels/mark-read/modify-labels/trash/send/reply/draft) are in place. Calendar tools are next.
 
 ## Why keyring + bring-your-own-client
 
@@ -63,14 +63,14 @@ Run `npm run whoami` from a terminal **once** to seed the keyring before launchi
 
 ## How it differs from the Outlook server
 
-| | Outlook (Graph) | Gmail |
-| --- | --- | --- |
-| Auth flow | MSAL device code | Loopback / installed-app (Google forbids device code for Gmail) |
-| Mail container | Folders | **Labels** (`INBOX`, `SENT`, `DRAFT`, `TRASH`, custom) |
-| Search | Graph `$search` (KQL) | Gmail query syntax (`from: subject: has:attachment newer_than:`) |
-| Send | JSON message | base64url **RFC-2822 MIME** |
-| Soft delete | move to Deleted Items | `trash` / `untrash` |
-| Calendar | same Graph API | **separate** Google Calendar API + scope |
+|                | Outlook (Graph)       | Gmail                                                            |
+| -------------- | --------------------- | ---------------------------------------------------------------- |
+| Auth flow      | MSAL device code      | Loopback / installed-app (Google forbids device code for Gmail)  |
+| Mail container | Folders               | **Labels** (`INBOX`, `SENT`, `DRAFT`, `TRASH`, custom)           |
+| Search         | Graph `$search` (KQL) | Gmail query syntax (`from: subject: has:attachment newer_than:`) |
+| Send           | JSON message          | base64url **RFC-2822 MIME**                                      |
+| Soft delete    | move to Deleted Items | `trash` / `untrash`                                              |
+| Calendar       | same Graph API        | **separate** Google Calendar API + scope                         |
 
 ## License
 
