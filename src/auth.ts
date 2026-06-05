@@ -3,7 +3,7 @@
 import { createServer } from "node:http";
 import { AddressInfo } from "node:net";
 import { randomBytes } from "node:crypto";
-import { exec } from "node:child_process";
+import { execFile } from "node:child_process";
 import { AsyncEntry } from "@napi-rs/keyring";
 import { google } from "googleapis";
 import type { OAuth2Client, Credentials } from "google-auth-library";
@@ -207,15 +207,17 @@ async function runLoopbackFlow(): Promise<OAuth2Client> {
 }
 
 function openBrowser(url: string): void {
+  // Pass the URL as an argv element (no shell), so it can't be interpreted as
+  // a shell command. Best-effort; if it fails the user copies the URL from
+  // stderr. On Windows, `cmd /c start "" <url>` ("" = empty window title).
   const platform = process.platform;
-  const cmd =
-    platform === "darwin"
-      ? "open"
-      : platform === "win32"
-        ? "start"
-        : "xdg-open";
-  // Best-effort; if it fails the user can copy the URL printed to stderr.
-  exec(`${cmd} "${url}"`, () => {});
+  if (platform === "darwin") {
+    execFile("open", [url], () => {});
+  } else if (platform === "win32") {
+    execFile("cmd", ["/c", "start", "", url], () => {});
+  } else {
+    execFile("xdg-open", [url], () => {});
+  }
 }
 
 function silentFailureReason(err: unknown): string {

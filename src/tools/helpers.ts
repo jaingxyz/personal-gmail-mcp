@@ -104,8 +104,11 @@ export function buildRawMessage(opts: {
   // Encode the subject as RFC-2047 if it has non-ASCII chars.
   lines.push(`Subject: ${encodeHeaderValue(opts.subject ?? "")}`);
   lines.push("MIME-Version: 1.0");
-  if (opts.inReplyTo) lines.push(`In-Reply-To: ${opts.inReplyTo}`);
-  if (opts.references) lines.push(`References: ${opts.references}`);
+  // inReplyTo/references are derived from a FETCHED message's headers, not
+  // from email-validated input, so strip CR/LF to prevent header injection
+  // (a crafted Message-ID could otherwise smuggle "\r\nBcc: ...").
+  if (opts.inReplyTo) lines.push(`In-Reply-To: ${stripCrlf(opts.inReplyTo)}`);
+  if (opts.references) lines.push(`References: ${stripCrlf(opts.references)}`);
   const contentType = opts.bodyFormat === "html" ? "text/html" : "text/plain";
   lines.push(`Content-Type: ${contentType}; charset="UTF-8"`);
   lines.push("Content-Transfer-Encoding: base64");
@@ -116,11 +119,21 @@ export function buildRawMessage(opts: {
   return Buffer.from(lines.join("\r\n"), "utf8").toString("base64url");
 }
 
-/** RFC-2047 encode a header value if it contains non-ASCII characters. */
+/** Remove CR/LF so a value can't inject extra MIME headers. */
+export function stripCrlf(value: string): string {
+  return value.replace(/[\r\n]+/g, " ");
+}
+
+/**
+ * RFC-2047 encode a header value. CR/LF are stripped first so they can't
+ * smuggle additional headers (the plain-ASCII branch would otherwise pass
+ * them straight through, since the test below treats them as ASCII).
+ */
 export function encodeHeaderValue(value: string): string {
+  const safe = stripCrlf(value);
   // eslint-disable-next-line no-control-regex
-  if (/^[\x00-\x7f]*$/.test(value)) return value;
-  return `=?UTF-8?B?${Buffer.from(value, "utf8").toString("base64")}?=`;
+  if (/^[\x00-\x7f]*$/.test(safe)) return safe;
+  return `=?UTF-8?B?${Buffer.from(safe, "utf8").toString("base64")}?=`;
 }
 
 /** Truncate text to a max length, appending a marker when cut. */

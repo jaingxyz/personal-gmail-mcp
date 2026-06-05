@@ -126,6 +126,20 @@ describe("buildRawMessage", () => {
     expect(decoded).toContain("References: <root@mail> <orig@mail>");
     expect(decoded).toContain("Content-Type: text/html");
   });
+
+  it("strips CR/LF from header values to block header injection", () => {
+    // A crafted subject / Message-ID must not be able to inject a Bcc header.
+    const raw = buildRawMessage({
+      to: ["a@b.com"],
+      subject: "Hi\r\nBcc: attacker@evil.com",
+      body: "x",
+      inReplyTo: "<id>\r\nBcc: attacker@evil.com",
+    });
+    const decoded = Buffer.from(raw, "base64url").toString("utf8");
+    // The injected "Bcc:" must not appear as its own header line.
+    expect(decoded).not.toMatch(/\r\nBcc: attacker@evil\.com/);
+    expect(decoded).toContain("Subject: Hi Bcc: attacker@evil.com");
+  });
 });
 
 describe("encodeHeaderValue", () => {
