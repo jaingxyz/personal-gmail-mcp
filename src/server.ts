@@ -34,6 +34,22 @@ import {
   sendDraft,
   sendDraftSchema,
 } from "./tools/send.js";
+import {
+  cancelEvent,
+  cancelEventSchema,
+  createEvent,
+  createEventSchema,
+  listCalendars,
+  listCalendarsSchema,
+  listEvents,
+  listEventsSchema,
+  readEvent,
+  readEventSchema,
+  respondSchema,
+  respondToInvite,
+  updateEvent,
+  updateEventSchema,
+} from "./tools/calendar.js";
 
 const PAGINATION_NOTE =
   "Returns up to `limit` (max 100) plus a `nextCursor`; pass it back as `cursor` to page through more.";
@@ -188,6 +204,89 @@ export function buildServer(): McpServer {
       annotations: { destructiveHint: true },
     },
     async (args) => toolResult(await sendDraft(args)),
+  );
+
+  // ---------- Calendar ----------
+
+  server.registerTool(
+    "gmail_calendar_list_calendars",
+    {
+      title: "List calendars",
+      description:
+        "List the user's calendars (primary + subscribed) with id, name, default flag, and whether they're editable.",
+      inputSchema: listCalendarsSchema.shape,
+    },
+    async (args) => toolResult(await listCalendars(args)),
+  );
+
+  server.registerTool(
+    "gmail_calendar_list_events",
+    {
+      title: "List events in range",
+      description:
+        "List events in a time range. Recurring series are expanded into individual instances, ordered by start time. Defaults to the primary calendar.",
+      inputSchema: listEventsSchema.shape,
+    },
+    async (args) => toolResult(await listEvents(args)),
+  );
+
+  server.registerTool(
+    "gmail_calendar_read_event",
+    {
+      title: "Read event",
+      description:
+        "Read full details of a single event including description, attendees, and recurrence.",
+      inputSchema: readEventSchema.shape,
+    },
+    async (args) => toolResult(await readEvent(args)),
+  );
+
+  server.registerTool(
+    "gmail_calendar_create_event",
+    {
+      title: "Create event",
+      description:
+        "Create an event. Times use {dateTime, timeZone} where dateTime is local-form (no offset) and timeZone is an IANA name. If attendees are provided, invites are sent. isOnlineMeeting attaches a Google Meet link.",
+      inputSchema: createEventSchema.shape,
+      annotations: { destructiveHint: true },
+    },
+    async (args) => toolResult(await createEvent(args)),
+  );
+
+  server.registerTool(
+    "gmail_calendar_update_event",
+    {
+      title: "Update event",
+      description:
+        "Update an event's subject, time, location, description, or attendees. Works on single instances of a recurring series (each instance has its own id).",
+      inputSchema: updateEventSchema.shape,
+      annotations: { destructiveHint: true },
+    },
+    async (args) => toolResult(await updateEvent(args)),
+  );
+
+  server.registerTool(
+    "gmail_calendar_cancel_event",
+    {
+      title: "Cancel/delete event",
+      description:
+        "Delete an event. If you organize it and sendUpdates=all (default), attendees receive a cancellation. Use sendUpdates=none for solo events.",
+      inputSchema: cancelEventSchema.shape,
+      annotations: { destructiveHint: true },
+    },
+    async (args) => toolResult(await cancelEvent(args)),
+  );
+
+  server.registerTool(
+    "gmail_calendar_respond_to_invite",
+    {
+      title: "Respond to invite",
+      description:
+        "Respond to a meeting invite as accept, tentativelyAccept, or decline. Optionally include a comment and choose whether to notify the organizer.",
+      inputSchema: respondSchema.shape,
+      annotations: { destructiveHint: true },
+    },
+    async (args) => toolResult(await respondToInvite(args)),
   );
 
   return server;

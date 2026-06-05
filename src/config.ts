@@ -74,11 +74,16 @@ export const config = {
   // don't have to pre-register a fixed one.
   redirectHost: process.env.GOOGLE_REDIRECT_HOST || "127.0.0.1",
   // Delegated scopes. mail.google.com gives full mailbox (read/modify/send);
-  // calendar.events covers event CRUD. Both are "restricted" scopes — the
-  // OAuth app must be published (not in Testing) for long-lived refresh tokens.
+  // calendar.events covers event CRUD on a known calendar (incl. "primary");
+  // calendar.calendarlist.readonly is needed to ENUMERATE calendars
+  // (calendarList.list) — calendar.events alone returns 403 there.
+  // mail.google.com and the calendar scopes are "restricted" — the OAuth app
+  // must be published (not in Testing) for long-lived refresh tokens.
+  // NOTE: changing this list invalidates the cached token; re-run `whoami`.
   scopes: [
     "https://mail.google.com/",
     "https://www.googleapis.com/auth/calendar.events",
+    "https://www.googleapis.com/auth/calendar.calendarlist.readonly",
     "https://www.googleapis.com/auth/userinfo.email",
     "openid",
   ],
