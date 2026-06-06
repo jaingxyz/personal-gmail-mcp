@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <!-- Background: rounded square in Outlook blue -->
+  <rect width="256" height="256" rx="40" ry="40" fill="#0078D4"/>
+
+  <!-- Envelope (back rectangle) -->
+  <rect x="40" y="80" width="176" height="120" rx="8" ry="8" fill="#FFFFFF"/>
+
+  <!-- Envelope flap -->
+  <path d="M 40 88 L 128 152 L 216 88 L 216 96 L 128 160 L 40 96 Z" fill="#106EBE"/>
+
+  <!-- Calendar accent: small grid in lower-right corner overlapping the envelope -->
+  <rect x="148" y="138" width="68" height="62" rx="6" ry="6" fill="#FFFFFF" stroke="#0078D4" stroke-width="3"/>
+  <rect x="148" y="138" width="68" height="14" rx="6" ry="6" fill="#0078D4"/>
+  <!-- Grid lines -->
+  <line x1="170" y1="152" x2="170" y2="200" stroke="#0078D4" stroke-width="1.5"/>
+  <line x1="192" y1="152" x2="192" y2="200" stroke="#0078D4" stroke-width="1.5"/>
+  <line x1="148" y1="168" x2="216" y2="168" stroke="#0078D4" stroke-width="1.5"/>
+  <line x1="148" y1="184" x2="216" y2="184" stroke="#0078D4" stroke-width="1.5"/>
+</svg>

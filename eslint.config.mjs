@@ -6,7 +6,7 @@ import prettier from "eslint-config-prettier";
 
 export default tseslint.config(
   {
-    ignores: ["dist/", "coverage/", "node_modules/"],
+    ignores: ["dist/", "coverage/", "node_modules/", "bundle/**"],
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,
@@ -25,6 +25,21 @@ export default tseslint.config(
     files: ["test/**/*.ts"],
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
+    },
+  },
+  {
+    // Node-flavored build scripts: declare the globals they use.
+    files: ["scripts/**/*.mjs", "scripts/**/*.js"],
+    languageOptions: {
+      globals: {
+        process: "readonly",
+        console: "readonly",
+        setTimeout: "readonly",
+        fetch: "readonly",
+      },
+    },
+    rules: {
+      "no-console": "off",
     },
   },
 );

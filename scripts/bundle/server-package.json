@@ -1,0 +1,12 @@
+{
+  "name": "personal-gmail-mcp-bundle",
+  "version": "0.1.1",
+  "type": "module",
+  "private": true,
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "@napi-rs/keyring": "^1.3.0",
+    "googleapis": "^173.0.0",
+    "zod": "^4.4.3"
+  }
+}

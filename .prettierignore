@@ -1,0 +1,8 @@
+dist/
+coverage/
+node_modules/
+/bundle/
+package-lock.json
+LICENSE
+*.html
+*.mcpb
