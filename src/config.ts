@@ -5,9 +5,16 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 function loadDotEnv(): void {
+  // This module compiles to dist/config.js, so the project root (where .env
+  // lives) is one level up: dist/../.env. In dev (ts-node on src/config.ts)
+  // it's src/../.env — same place. Earlier this used "../../.env", which
+  // resolved ABOVE the repo and never matched, so .env only loaded when the
+  // process happened to be launched from the project root (cwd fallback).
+  // That broke env-less launches from MCP clients running in another cwd.
   const here = dirname(fileURLToPath(import.meta.url));
   const candidates = [
-    resolve(here, "../../.env"),
+    resolve(here, "../.env"), // dist/../.env or src/../.env = project root
+    resolve(here, "../../.env"), // legacy fallback (e.g. nested dist layout)
     resolve(process.cwd(), ".env"),
   ];
   for (const path of candidates) {
