@@ -8,6 +8,10 @@ coverage/
 .DS_Store
 *.tsbuildinfo
 
+# Downloaded Google OAuth client secrets — never commit
+client_secret*.json
+*credentials*.json
+
 # Personal notes (never commit)
 LEARNINGS.md
 NOTES.md
