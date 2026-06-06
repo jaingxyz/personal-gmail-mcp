@@ -1,6 +1,6 @@
 {
   "name": "@jaingxyz/personal-gmail-mcp",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Model Context Protocol server for a personal Gmail (consumer Google account) inbox and calendar, via the Gmail and Google Calendar APIs. Stdio transport, loopback OAuth, OS-keyring token cache.",
   "type": "module",
   "license": "AGPL-3.0-or-later",
