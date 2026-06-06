@@ -5,6 +5,7 @@
 [![Semgrep](https://github.com/jaingxyz/personal-gmail-mcp/actions/workflows/semgrep.yml/badge.svg)](https://github.com/jaingxyz/personal-gmail-mcp/actions/workflows/semgrep.yml)
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/jaingxyz/personal-gmail-mcp/badge)](https://scorecard.dev/viewer/?uri=github.com/jaingxyz/personal-gmail-mcp)
 [![npm version](https://img.shields.io/npm/v/@jaingxyz/personal-gmail-mcp?label=npm)](https://www.npmjs.com/package/@jaingxyz/personal-gmail-mcp)
+[![Smithery](https://smithery.ai/badge/jaingxyz/personal-gmail-mcp)](https://smithery.ai/servers/jaingxyz/personal-gmail-mcp)
 [![License: AGPL v3+](https://img.shields.io/badge/license-AGPL--3.0--or--later-blue)](./LICENSE)
 
 A [Model Context Protocol](https://modelcontextprotocol.io/) server that exposes a personal Gmail (consumer Google account) inbox **and calendar** to MCP clients like Claude Desktop. Talks to the Gmail and Google Calendar APIs over HTTPS, uses a local **loopback OAuth** flow, and stores tokens in the **OS keyring**.
