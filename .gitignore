@@ -12,6 +12,10 @@ coverage/
 client_secret*.json
 *credentials*.json
 
+# MCPB bundle artifacts (build output, do not commit)
+/bundle/
+*.mcpb
+
 # Personal notes (never commit)
 LEARNINGS.md
 NOTES.md

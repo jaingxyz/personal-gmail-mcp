@@ -1,0 +1,64 @@
+{
+  "manifest_version": "0.3",
+  "name": "personal-gmail-mcp",
+  "display_name": "Personal Gmail (Google APIs)",
+  "version": "0.1.1",
+  "description": "Read and act on your personal Gmail inbox and Google Calendar from Claude. Each user runs the server locally with their own Google OAuth client; tokens never leave the machine.",
+  "long_description": "**Personal Gmail MCP** exposes a personal Gmail (consumer Google account) inbox and Google Calendar to MCP clients like Claude Desktop via the Gmail and Google Calendar APIs.\n\n## What you get\n\n**Email tools** (`gmail_*`):\n- List labels, list recent messages (with unread filter + cursor paging), Gmail-query search\n- Read full messages with decoded body (text preferred, HTML fallback)\n- Mark read/unread, add/remove labels (archive via INBOX, star, etc.), trash / hard-delete, untrash\n- Send new mail, reply in-thread (with optional reply-all), create drafts, send drafts later\n\n**Calendar tools** (`gmail_calendar_*`):\n- List calendars\n- List events in a time range with recurring series expanded to instances\n- Read full event details including attendees and recurrence\n- Create (with optional Google Meet link) / update / cancel events\n- Respond to meeting invites (accept / tentatively / decline)\n\n## How it works\n\n- **Local stdio only** — no hosted backend, no proxy. Your tokens stay in the OS keyring.\n- **Loopback OAuth** — first run opens a browser to sign in (Google forbids device-code for Gmail); subsequent runs refresh silently.\n- **Bring your own Google OAuth client** — create a free Desktop OAuth client in Google Cloud (~5 minutes) and publish the consent screen to production for long-lived tokens. Step-by-step guide in the repo README.\n- **Scopes**: `https://mail.google.com/`, `calendar.events`, `calendar.calendarlist.readonly`, `userinfo.email`, `openid`.\n\n## Distribution note\n\nThis `.mcpb` bundle is built for **macOS arm64** only because the OS-keyring native binary is platform-specific. Users on other platforms (Intel Mac, Windows, Linux) should install via `npx -y @jaingxyz/personal-gmail-mcp`, which fetches the right native binary at install time. See the [README](https://github.com/jaingxyz/personal-gmail-mcp#readme) for full setup.",
+  "author": {
+    "name": "jaingxyz",
+    "url": "https://github.com/jaingxyz"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jaingxyz/personal-gmail-mcp.git"
+  },
+  "homepage": "https://github.com/jaingxyz/personal-gmail-mcp#readme",
+  "documentation": "https://github.com/jaingxyz/personal-gmail-mcp#readme",
+  "support": "https://github.com/jaingxyz/personal-gmail-mcp/security/advisories/new",
+  "license": "AGPL-3.0-or-later",
+  "keywords": ["gmail", "google-calendar", "email", "calendar", "mcp"],
+  "icon": "icon.png",
+  "server": {
+    "type": "node",
+    "entry_point": "server/index.js",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/server/index.js"],
+      "env": {
+        "GOOGLE_CLIENT_ID": "${user_config.google_client_id}",
+        "GOOGLE_CLIENT_SECRET": "${user_config.google_client_secret}",
+        "PERSONAL_GMAIL_TZ": "${user_config.timezone}"
+      }
+    }
+  },
+  "compatibility": {
+    "platforms": ["darwin"],
+    "runtimes": {
+      "node": ">=22.22.1"
+    }
+  },
+  "user_config": {
+    "google_client_id": {
+      "type": "string",
+      "title": "Google OAuth Client ID",
+      "description": "OAuth client ID from your Google Cloud project (Desktop app type). See https://github.com/jaingxyz/personal-gmail-mcp#google-setup for the 5-minute setup.",
+      "sensitive": false,
+      "required": true
+    },
+    "google_client_secret": {
+      "type": "string",
+      "title": "Google OAuth Client Secret",
+      "description": "OAuth client secret paired with the client ID above.",
+      "sensitive": true,
+      "required": true
+    },
+    "timezone": {
+      "type": "string",
+      "title": "Display timezone",
+      "description": "IANA timezone used to render calendar event times (e.g. America/Los_Angeles, America/New_York, Europe/London).",
+      "default": "America/Los_Angeles",
+      "required": false
+    }
+  }
+}

@@ -44,6 +44,7 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "bundle": "npm run build && rm -rf bundle personal-gmail-mcp.mcpb && mkdir -p bundle/server && cp -r dist/* bundle/server/ && cp scripts/bundle/server-package.json bundle/server/package.json && cp assets/icon.png bundle/icon.png && node scripts/bundle/build-manifest.mjs && (cd bundle/server && npm install --omit=dev --no-fund --no-audit) && npx --yes @anthropic-ai/mcpb pack bundle personal-gmail-mcp.mcpb && node scripts/bundle/swap-manifest.mjs",
     "prepublishOnly": "npm run build && npm run lint && npm run format:check && npm test",
     "clean": "rm -rf dist coverage"
   },
