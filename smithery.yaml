@@ -1,0 +1,31 @@
+# Smithery manifest — https://smithery.ai/docs/build/configuration
+# This server is local-only by design: each user runs it on their own machine
+# against their own Google Cloud OAuth client. Tokens are kept in the OS
+# keyring; nothing flows through Smithery's infra.
+
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    required: [GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET]
+    properties:
+      GOOGLE_CLIENT_ID:
+        type: string
+        description: OAuth client ID from your Google Cloud project (Desktop app type). See README "Google setup".
+      GOOGLE_CLIENT_SECRET:
+        type: string
+        description: OAuth client secret paired with GOOGLE_CLIENT_ID.
+      PERSONAL_GMAIL_TZ:
+        type: string
+        default: America/Los_Angeles
+        description: IANA timezone used to render calendar event times.
+  commandFunction: |-
+    (config) => ({
+      command: "npx",
+      args: ["-y", "@jaingxyz/personal-gmail-mcp"],
+      env: {
+        GOOGLE_CLIENT_ID: config.GOOGLE_CLIENT_ID,
+        GOOGLE_CLIENT_SECRET: config.GOOGLE_CLIENT_SECRET,
+        PERSONAL_GMAIL_TZ: config.PERSONAL_GMAIL_TZ || "America/Los_Angeles"
+      }
+    })
