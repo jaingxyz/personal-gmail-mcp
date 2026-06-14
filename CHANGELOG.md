@@ -4,6 +4,15 @@ All notable changes to this project are documented here. The format is loosely
 based on [Keep a Changelog](https://keepachangelog.com/), and this project
 adheres to [Semantic Versioning](https://semver.org/).
 
+## 0.1.2
+
+- **Fixed:** `.env` is now resolved from the project root (`dist/../.env`)
+  instead of one level too high, so credentials load when an MCP client
+  launches the server from a different working directory (e.g. Claude Desktop),
+  not only when started from the repo root.
+- **Added:** MCPB bundle pipeline and Smithery manifest for local/stdio
+  publishing; status badges in the README.
+
 ## 0.1.1
 
 - Validate the automated release pipeline (tag → GitHub Actions → npm publish
