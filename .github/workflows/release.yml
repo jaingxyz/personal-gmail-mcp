@@ -52,7 +52,8 @@ jobs:
           cache: npm
 
       - name: Upgrade npm (OIDC trusted publishing needs >= 11.5.1)
-        run: npm install -g npm@latest
+        # Pinned (not @latest) for supply-chain hygiene; bump deliberately.
+        run: npm install -g npm@11.17.0
 
       - name: Install
         run: npm ci
