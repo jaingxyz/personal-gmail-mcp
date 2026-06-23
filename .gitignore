@@ -19,3 +19,4 @@ client_secret*.json
 # Personal notes (never commit)
 LEARNINGS.md
 NOTES.md
+SETUP-SESSION-LOG.md
