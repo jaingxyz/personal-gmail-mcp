@@ -11,8 +11,8 @@ name: Release
 #
 # Auth: npm OIDC "trusted publishing" — no NPM_TOKEN secret. The package must
 # list this repo + workflow as a trusted publisher on npmjs.com (one-time
-# setup). Requires npm >= 11.5.1, so we upgrade npm before publishing (Node 22
-# ships npm 10.x).
+# setup). Requires npm >= 11.5.1, which Node 24 bundles (npm 11.16.0), so no
+# manual npm upgrade is needed.
 
 on:
   push:
@@ -42,18 +42,14 @@ jobs:
       contents: write # create the GitHub Release
       id-token: write # OIDC: trusted publishing + provenance attestation
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Setup Node
-        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.0.0
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: 22
+          node-version: 24
           registry-url: "https://registry.npmjs.org"
           cache: npm
-
-      - name: Upgrade npm (OIDC trusted publishing needs >= 11.5.1)
-        # Pinned (not @latest) for supply-chain hygiene; bump deliberately.
-        run: npm install -g npm@11.17.0
 
       - name: Install
         run: npm ci
