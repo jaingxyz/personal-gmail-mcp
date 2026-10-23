@@ -4,6 +4,14 @@ All notable changes to this project are documented here. The format is loosely
 based on [Keep a Changelog](https://keepachangelog.com/), and this project
 adheres to [Semantic Versioning](https://semver.org/).
 
+## Unreleased
+
+- **Retired** the npm package and Smithery listing; the project is now
+  source-only (`package.json` is marked `private`, the npm release workflow and
+  `smithery.yaml` are removed). Install from a clone — see the README.
+- **Security:** dependency updates for `@modelcontextprotocol/sdk`, `hono`,
+  `proxy-addr` and `vitest` advisories.
+
 ## 0.1.2
 
 - **Fixed:** `.env` is now resolved from the project root (`dist/../.env`)

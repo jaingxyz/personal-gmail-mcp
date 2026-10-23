@@ -4,15 +4,13 @@
 [![CodeQL](https://github.com/jaingxyz/personal-gmail-mcp/actions/workflows/codeql.yml/badge.svg)](https://github.com/jaingxyz/personal-gmail-mcp/actions/workflows/codeql.yml)
 [![Semgrep](https://github.com/jaingxyz/personal-gmail-mcp/actions/workflows/semgrep.yml/badge.svg)](https://github.com/jaingxyz/personal-gmail-mcp/actions/workflows/semgrep.yml)
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/jaingxyz/personal-gmail-mcp/badge)](https://scorecard.dev/viewer/?uri=github.com/jaingxyz/personal-gmail-mcp)
-[![npm version](https://img.shields.io/npm/v/@jaingxyz/personal-gmail-mcp?label=npm)](https://www.npmjs.com/package/@jaingxyz/personal-gmail-mcp)
-[![Smithery](https://smithery.ai/badge/jaingxyz/personal-gmail-mcp)](https://smithery.ai/servers/jaingxyz/personal-gmail-mcp)
 [![License: AGPL v3+](https://img.shields.io/badge/license-AGPL--3.0--or--later-blue)](./LICENSE)
 
 A [Model Context Protocol](https://modelcontextprotocol.io/) server that exposes a personal Gmail (consumer Google account) inbox **and calendar** to MCP clients like Claude Desktop. Talks to the Gmail and Google Calendar APIs over HTTPS, uses a local **loopback OAuth** flow, and stores tokens in the **OS keyring**.
 
 Sibling to [personal-outlook-mcp](https://github.com/jaingxyz/personal-outlook-mcp); same design (local stdio, keyring-backed tokens, you bring your own OAuth client), different provider. Tools are prefixed `gmail_*`.
 
-> **Status: functional.** Auth (loopback OAuth + keyring token cache), 12 mail tools, and 7 calendar tools are in place and verified against a live account. Published on npm as [`@jaingxyz/personal-gmail-mcp`](https://www.npmjs.com/package/@jaingxyz/personal-gmail-mcp) — install via `npx` (see below) or from source.
+> **Status: functional.** Auth (loopback OAuth + keyring token cache), 12 mail tools, and 7 calendar tools are in place and verified against a live account. Install from source (see below); it is no longer published to npm.
 
 ## Why keyring + bring-your-own-client
 
@@ -61,15 +59,15 @@ node -e "import('./dist/auth.js').then(m => m.signOut())"
 
 ## MCP client integration
 
-Point your MCP client (Claude Desktop or similar) at the server. The simplest
-form uses `npx` to fetch the published package:
+Point your MCP client (Claude Desktop or similar) at the built `dist/index.js`
+in your clone, using an absolute path:
 
 ```json
 {
   "mcpServers": {
     "personal-gmail": {
-      "command": "npx",
-      "args": ["-y", "@jaingxyz/personal-gmail-mcp"],
+      "command": "node",
+      "args": ["/absolute/path/to/personal-gmail-mcp/dist/index.js"],
       "env": {
         "GOOGLE_CLIENT_ID": "<YOUR-CLIENT-ID>",
         "GOOGLE_CLIENT_SECRET": "<YOUR-CLIENT-SECRET>"
@@ -79,23 +77,12 @@ form uses `npx` to fetch the published package:
 }
 ```
 
-If you cloned the repo instead, use the **from-source** form with an absolute
-path to the built `dist/index.js`:
-
-```json
-{
-  "command": "node",
-  "args": ["/absolute/path/to/personal-gmail-mcp/dist/index.js"],
-  "env": { "GOOGLE_CLIENT_ID": "...", "GOOGLE_CLIENT_SECRET": "..." }
-}
-```
-
 > If your `node` is managed by a version manager (nvm, mise, asdf), use the
 > **absolute path** to the node binary (e.g. `which node`) — MCP clients launch
 > with a minimal `PATH` and won't resolve a bare `node`.
 
 Seed the keyring from a terminal **once** before launching the client — run
-`npx -y @jaingxyz/personal-gmail-mcp whoami` (or `npm run whoami` from a clone).
+`npm run whoami` from the clone.
 The browser/consent step can't be surfaced from inside
 the app (stderr is swallowed), so the MCP server only does silent refresh and
 will report `Re-authentication required` if the cache is empty or stale.
